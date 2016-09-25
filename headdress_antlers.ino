@@ -5,6 +5,7 @@
 #define LED_TYPE    WS2812B
 #define COLOR_ORDER GRB
 #define NUM_LEDS    66
+#define ONBOARD_LED 13
 
 CRGB leds[NUM_LEDS];
 
@@ -44,6 +45,13 @@ void loop()
     FastLED.show();
     // insert a delay to keep the framerate modest
     FastLED.delay(1000/FRAMES_PER_SECOND);
+
+    // Onboard LED blink for debugging
+    if (gHue > 128) {
+        digitalWrite(ONBOARD_LED, HIGH);   // turn the LED on (HIGH is the voltage level)
+    } else {
+        digitalWrite(ONBOARD_LED, LOW);
+    }
 
     // do some periodic updates
     EVERY_N_MILLISECONDS(HUE_CHANGE_MILLISECONDS) { gHue++; } // slowly cycle the "base color" through the rainbow
@@ -96,7 +104,7 @@ void confetti()
 {
     // random colored speckles that blink in and fade smoothly
     fadeToBlackBy(leds, NUM_LEDS, 10);
-    int pos = random16(NUM_LEDS);
+    uint8_t pos = random16(NUM_LEDS);
     leds[pos] += CHSV(gHue + random8(64), 200, 255);
 }
 
@@ -104,7 +112,7 @@ void sinelon()
 {
     // a colored dot sweeping back and forth, with fading trails
     fadeToBlackBy(leds, NUM_LEDS, 20);
-    int pos = beatsin16(13, 0, NUM_LEDS);
+    uint8_t pos = beatsin16(13, 0, NUM_LEDS);
     leds[pos] += CHSV(gHue, 255, 192);
 }
 
@@ -145,12 +153,12 @@ void Fire2012()
 
     // Step 3.  Randomly ignite new 'sparks' of heat near the bottom
     if (random8() < SPARKING) {
-        int yFire = random8(7);
+        uint8_t yFire = random8(7);
         heat[yFire] = qadd8(heat[yFire], random8(160, 255));
     }
 
     // Step 4.  Map from heat cells to LED colors
-    for (int j = 0; j < NUM_LEDS; j++) {
+    for (uint8_t j = 0; j < NUM_LEDS; j++) {
         leds[j] = HeatColor(heat[j]);
     }
 }
