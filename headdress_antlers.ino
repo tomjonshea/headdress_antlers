@@ -87,7 +87,7 @@ void addGlitter(fract8 chanceOfGlitter)
 }
 
 void glitterOnlyWhite() {
-    leds[random16(NUM_LEDS)] += CRGB::White
+    leds[random16(NUM_LEDS)] += CRGB::White;
     fadeToBlackBy(leds, NUM_LEDS, 50);
     delay(15);
 }
