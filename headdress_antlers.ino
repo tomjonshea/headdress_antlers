@@ -25,6 +25,15 @@ uint8_t       colorLoop = 1;
 void setup() {
     delay(1000); // 1 second delay for recovery
 
+     // Onboard LED blink for debugging
+    pinMode(ONBOARD_LED, OUTPUT);
+    for (uint8_t i = 0; i < 4; i++) {
+        digitalWrite(ONBOARD_LED, HIGH);   // turn the LED on (HIGH is the voltage level)
+        delay(200);
+        digitalWrite(ONBOARD_LED, LOW);
+        delay(200);
+    }
+
     FastLED.addLeds<LED_TYPE,DATA_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
     FastLED.setBrightness(BRIGHTNESS);
 }
@@ -45,13 +54,6 @@ void loop()
     FastLED.show();
     // insert a delay to keep the framerate modest
     FastLED.delay(1000/FRAMES_PER_SECOND);
-
-    // Onboard LED blink for debugging
-    if (gHue > 128) {
-        digitalWrite(ONBOARD_LED, HIGH);   // turn the LED on (HIGH is the voltage level)
-    } else {
-        digitalWrite(ONBOARD_LED, LOW);
-    }
 
     // do some periodic updates
     EVERY_N_MILLISECONDS(HUE_CHANGE_MILLISECONDS) { gHue++; } // slowly cycle the "base color" through the rainbow
